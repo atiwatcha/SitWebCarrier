@@ -1,0 +1,175 @@
+﻿@model List<SitWebCarrier.Models.sap_document>
+@{
+    ViewBag.Title = "getSap_document";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+  <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>@*
+    
+     <button id="getModal">getModal</button>*@
+    <table id="getsap_document" class="table">
+        <thead>
+            <tr>
+                <td></td>
+                <td>sap_shipment</td>
+                <td>storerkey</td>
+                <td>sap_do</td>
+                <td>type_do</td>
+                <td>externalloadid</td>
+                <td>qty</td>
+                <td>c_shopto</td>
+                <td>c_billto</td>
+                <td>ordergroup</td>
+                <td>b_state</td>
+                <td>b_zip</td>
+                <td>containerqty</td>
+                <td>delivertplace</td>
+                <td>dischareplace</td>
+                <td>notes</td>
+                <td>notes2</td>
+                <td>appointmenttime</td>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>
+                         <button id="getModal1" onclick="ShowModal('@a.sap_shipment')">เลือกคน รถ</button>
+                     </td>
+                    <td>@a.sap_shipment</td>
+                    <td>@a.storerkey</td>
+                    <td>@a.sap_do</td>
+                    <td>@a.type_do</td>
+                    <td>@a.externalloadid</td>
+                    <td>@a.qty</td>
+                    <td>@a.c_shopto</td>
+                    <td>@a.c_billto</td>
+                    <td>@a.ordergroup</td>
+                    <td>@a.b_state</td>
+                    <td>@a.b_zip</td>
+                    <td>@a.containerqty</td>
+                    <td>@a.delivertplace</td>
+                    <td>@a.dischareplace</td>
+                    <td>@a.notes</td>
+                    <td>@a.notes2</td>
+                    <td>@a.appointmenttime_</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">หน้าคู่ค้าเลือกงานให้คนขับ รถ</h4>
+                </div>
+                <div class="modal-body">
+                     <fieldset>
+                <legend>Log in Form</legend>
+                <ol>
+                    <li>
+                        <h5 class="modal-title">Shipment No : <span id="ship"></span></h5>
+                        <input type="hidden" id="sap_shipment_hide" value="" />
+                    </li>
+                    <li>
+                        <h5 class="modal-title">Driver</h5>
+                        @Html.DropDownList("List_Driver", new SelectList(ViewBag.List_Driver, "driver_code", "first_name"), new { @style = "width:100%" })
+                    </li>   
+                    <li>
+                        <h5 class="modal-title">Truck</h5>
+                        @Html.DropDownList("List_Truck", new SelectList(ViewBag.List_Truck, "vehicle", "veh_text"), new { @style = "width:100%" })
+                    </li>                  
+                </ol>
+            </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="chk_sendCarrier()">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+
+}
+
+<script>
+    $(document).ready(function () {
+        // $('#getsap_document').DataTable();
+        //$('#List_Driver').select2();
+        //$('#List_Truck').select2();
+    });
+
+    //$('#getModal').click(ShowModal);
+    function ShowModal(sap_shipment) {
+        $('#myModal').modal('show');
+        $("#ship").html(sap_shipment);
+        $("#sap_shipment_hide").val(sap_shipment);
+        
+    };
+
+    //not used
+    function chk_sendCarrier() {
+        
+        var obj = { "sap_shipment": $("#sap_shipment_hide").val(), "Drivername": $("#List_Driver").val(), "Trailernumber": $("#List_Truck").val() };
+        $.ajax({ 
+            type: "POST", 
+            cache: false, 
+            url: '@Url.Action("getSap_documentAssigDriverTrailer", "Carrier")', // preview.php data: 
+            data: JSON.stringify(obj), // all form fields
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) { // on success, post (preview) returned data in fancybox 
+                console.log(data.Sucesss);
+                if (data.Sucesss == "0") {
+                    swal(data.ErrorMessage);
+                } else {
+                    $('#myModal').modal('hide');
+                    location.reload();
+                }
+                
+                //location.reload();
+
+            } // success 
+        }); // ajax
+
+        }
+
+        function editsap_document(sap_shipment) {
+            $.fancybox({
+                width: "800px",
+                height: "600px",
+
+                href: '@Url.Action("getsap_documentEdit", "Carrier", new RouteValueDictionary(new { sap_shipment = "Temp_sap_shipment" }))'.replace("Temp_sap_shipment", sap_shipment),
+            type: 'ajax'
+        });
+    }
+
+    function addsap_document() {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+
+            href: '@Url.Action("getsap_documentEdit", "Carrier")',
+            type: 'ajax'
+        });
+    }
+
+
+</script>

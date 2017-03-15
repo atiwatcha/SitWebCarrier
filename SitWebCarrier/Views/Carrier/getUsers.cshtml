@@ -1,0 +1,69 @@
+﻿@model List<SitWebCarrier.Models.Employee>
+@{
+    ViewBag.Title = "getUser";
+}
+
+<h2>getUsers</h2>
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <button id="adUsers" onclick="addUsers() ">Add Users</button>
+    <table id="getUsers">
+        <thead>
+            <tr>
+                <td>vehicle</td>
+                <td>veh_text</td>
+                <td>veh_type</td>
+                <td>veh_status</td>
+                <td>Users_status</td>
+                 <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+            
+                <tr>
+                    <td>@a.userid</td>
+                    <td>@a.password</td>
+                    <td>@a.first_name</td>
+                    <td>@a.last_name</td>
+                    <td>@a.carrier</td>
+                    <td>@a.authorized</td>
+                    <td>
+                        <button id="edUsers" onclick="editUsers('@a.userid.Trim()') ">Edit Users</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#getUsers').DataTable();
+
+    });
+    function editUsers(userid) {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+            
+            href: '@Url.Action("getUsersEdit", "Carrier",new RouteValueDictionary(new { userid = "Temp_userid" }))'.replace("Temp_userid", userid),
+            type: 'ajax'
+        });
+    }
+
+    function addUsers() {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+
+            href: '@Url.Action("getUsersEdit", "Carrier")',
+            type: 'ajax'
+        });
+    }
+
+</script>

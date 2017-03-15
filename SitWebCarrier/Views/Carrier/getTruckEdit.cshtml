@@ -1,0 +1,112 @@
+﻿@model SitWebCarrier.Models.Truck
+@{
+    ViewBag.Title = "getTruckEdit";
+    Layout = null;
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <section id="getTruckEdit">
+        <h2>Use a local account to log in.</h2>
+         @using (Html.BeginForm("editTruck", "Carrier", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+                <legend>Log in Form</legend>
+                <ol>
+                    <li>
+                        @Html.LabelFor(m => m.vehicle)
+                        @if (Model != null)
+                        {
+                            @Html.HiddenFor(m => m.vehicle)
+                        }else{
+                            @Html.TextBoxFor(m => m.vehicle_)
+                            @Html.ValidationMessageFor(m => m.vehicle)
+                        }
+                        
+
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.veh_text)
+                        @Html.TextBoxFor(m => m.veh_text)
+                        @Html.ValidationMessageFor(m => m.veh_text)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.veh_type)
+                        @Html.TextBoxFor(m => m.veh_type)
+                        @Html.ValidationMessageFor(m => m.veh_type)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.veh_status)
+                        @Html.TextBoxFor(m => m.veh_status)
+                        @Html.ValidationMessageFor(m => m.veh_status)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.truck_status)
+                        @Html.TextBoxFor(m => m.truck_status)
+                        @Html.ValidationMessageFor(m => m.truck_status)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.carrier)
+                        @Html.TextBoxFor(m => m.carrier)
+                        @Html.ValidationMessageFor(m => m.carrier)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.veh_nrtus)
+                        @Html.TextBoxFor(m => m.veh_nrtus)
+                        @Html.ValidationMessageFor(m => m.veh_nrtus)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.vol_uom)
+                        @Html.TextBoxFor(m => m.vol_uom)
+                        @Html.ValidationMessageFor(m => m.vol_uom)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.wgt_uom)
+                        @Html.TextBoxFor(m => m.wgt_uom)
+                        @Html.ValidationMessageFor(m => m.wgt_uom)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.class_grp)
+                        @Html.TextBoxFor(m => m.class_grp)
+                        @Html.ValidationMessageFor(m => m.class_grp)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.rfid)
+                        @Html.TextBoxFor(m => m.rfid)
+                        @Html.ValidationMessageFor(m => m.rfid)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.cre_date)
+                        @Html.TextBoxFor(m => m.cre_date)
+                        @Html.ValidationMessageFor(m => m.cre_date)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.cre_name)
+                        @Html.TextBoxFor(m => m.cre_name)
+                        @Html.ValidationMessageFor(m => m.cre_name)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.cha_date)
+                        @Html.TextBoxFor(m => m.cha_date)
+                        @Html.ValidationMessageFor(m => m.cha_date)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.cha_name)
+                        @Html.TextBoxFor(m => m.cha_name)
+                        @Html.ValidationMessageFor(m => m.cha_name)
+                    </li>
+                </ol>
+
+                <input type="submit" value="Log in" />
+            </fieldset>
+
+        }
+    </section>
+}

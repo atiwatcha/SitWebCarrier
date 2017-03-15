@@ -1,0 +1,91 @@
+﻿@model SitWebCarrier.Models.Driver
+@{
+    ViewBag.Title = "getTruckEdit";
+    Layout = null;
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <section id="getTruckEdit">
+        <h2>Use a local account to log in.</h2>
+         @using (Html.BeginForm("editDriver", "Carrier", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+                <legend>Log in Form</legend>
+                <ol>
+                    <li>
+                        @Html.LabelFor(m => m.driver_code)
+                        @if (Model != null)
+                        {
+                            @Html.HiddenFor(m => m.driver_code)
+                        }else{
+                            @Html.TextBoxFor(m => m.driver_code_)
+                            @Html.ValidationMessageFor(m => m.driver_code)
+                        }
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.pers_code)
+                        @Html.TextBoxFor(m => m.pers_code)
+                        @Html.ValidationMessageFor(m => m.pers_code)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.first_name)
+                        @Html.TextBoxFor(m => m.first_name)
+                        @Html.ValidationMessageFor(m => m.first_name)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.last_name)
+                        @Html.TextBoxFor(m => m.last_name)
+                        @Html.ValidationMessageFor(m => m.last_name)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.carrier)
+                        @Html.TextBoxFor(m => m.carrier)
+                        @Html.ValidationMessageFor(m => m.carrier)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.drv_status)
+                        @Html.TextBoxFor(m => m.drv_status)
+                        @Html.ValidationMessageFor(m => m.drv_status)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.license_type)
+                        @Html.TextBoxFor(m => m.license_type)
+                        @Html.ValidationMessageFor(m => m.license_type)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.valid_from)
+                        @Html.TextBoxFor(m => m.valid_from)
+                        @Html.ValidationMessageFor(m => m.valid_from)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.valid_to)
+                        @Html.TextBoxFor(m => m.valid_to)
+                        @Html.ValidationMessageFor(m => m.valid_to)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.status)
+                        @Html.TextBoxFor(m => m.status)
+                        @Html.ValidationMessageFor(m => m.status)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.rfid)
+                        @Html.TextBoxFor(m => m.rfid)
+                        @Html.ValidationMessageFor(m => m.rfid)
+                    </li>
+                   
+                </ol>
+
+                <input type="submit" value="Log in" />
+            </fieldset>
+
+        }
+    </section>
+}

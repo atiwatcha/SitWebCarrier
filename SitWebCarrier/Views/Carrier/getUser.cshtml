@@ -1,0 +1,102 @@
+﻿@model List<SitWebCarrier.Models.Employee>
+@{
+    ViewBag.Title = "getEmployee";
+}
+
+<h2>getEmployee</h2>
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <button id="adEmployee" onclick="addEmployee() ">Add Employee</button>
+    <table id="getEmployee">
+        <thead>
+            <tr>
+                <td>userid</td>
+                <td>first_name</td>
+                <td>last_name</td>
+                <td>carrier</td>
+                <td>authorized</td>
+                 <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+            
+                <tr>
+                    <td>@a.userid</td>
+                    <td>@a.first_name</td>
+                    <td>@a.last_name</td>
+                    <td>@a.carrier</td>
+                    <td>@a.authorized</td>
+                    <td>
+                        <button id="edEmployee" onclick="editEmployee('@a.userid.Trim()') ">Edit Employee</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#getEmployee').DataTable();
+
+    });
+    //$('#EmployeeEdit').click(EmployeeEdit);
+
+    function editEmployee(vehicle) {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+            
+            href: '@Url.Action("getUserEdit", "Carrier",new RouteValueDictionary(new { userid = "Temp_userid" }))'.replace("Temp_userid", vehicle),
+            type: 'ajax'
+        });
+    }
+
+    function addEmployee() {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+
+            href: '@Url.Action("getUserEdit", "Carrier")',
+            type: 'ajax'
+        });
+    }
+
+
+    function EmployeeEdit() {
+        var vehicle = $("#vehicle").val();
+        var veh_text = $("#veh_text").val();
+        var veh_type = $("#veh_type").val();
+        
+        var values = { "vehicle": vehicle, "veh_text": veh_text, "veh_type": veh_type};
+
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("getUserEdit", "Carrier")',
+            data: values,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                /*
+                var parsed = $.parseJSON(data.d);
+                $.each(parsed, function (i, jsondata) {
+                    $("#dividtodisplay").append("Appointment: " + jsondata.Appointment + "<br/>" + "Shipment: " + jsondata.Shipment);
+                });
+                */
+                console.log($.parseJSON(data));
+            },
+            error: function (XHR, errStatus, errorThrown) {
+                var err = JSON.parse(XHR.responseText);
+                errorMessage = err.Message;
+                alert(errorMessage);
+            }
+         });
+    }
+   
+</script>

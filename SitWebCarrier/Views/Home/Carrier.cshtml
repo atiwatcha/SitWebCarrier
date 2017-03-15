@@ -1,0 +1,131 @@
+﻿@model List<SitWebCarrier.Models.Carrier>
+@{
+    ViewBag.Title = "Carrier";
+    //Layout = null;
+}
+
+
+
+
+
+
+<h2>Carrier</h2>
+@if (ViewBag.ErrorMessage == null)
+{
+    <table id="example">
+        <thead>
+            <tr>
+                <td>col1</td>
+                <td>col2</td>
+                <td>col2</td>
+                <td>col2</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+            
+                <tr>
+                    <td>@a.Appointment</td>
+                    <td>@a.Shipment</td>
+                    <td>@a.IDVender</td>
+                    <td>
+                        <button id="getModal1" onclick="SetShipmentToVender('@a.Appointment') ">เลือกข้อมูลส่งต่อบริษัทขนส่ง</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="dividtodisplay"></div>
+    
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <p>One fine body&hellip;</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    
+}
+else
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+
+<script>
+
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').focus()
+    });
+
+    $('#getModal').click(ShowModal);
+
+
+    function SetShipmentToVender(appoint) {
+        console.log("Ship:" + appoint);
+        /*
+        var url = 'Url.Action("CarrierShipment", "Home",new RouteValueDictionary(new { appointmant = "Temp_app" }))'.replace("Temp_app", appoint);
+        window.open(url, '_blank');
+        */
+        $.fancybox({
+            width: 400,
+            height: 400,
+            autoSize: false,
+            href: '@Url.Action("CarrierShipment", "Home",new RouteValueDictionary(new { appointmant = "Temp_app" }))'.replace("Temp_app", appoint),
+            type: 'ajax'
+    });
+    
+    }
+
+
+
+    function ShowModal() {
+        $('#myModal').modal('show');
+        //TestJson();
+    };
+
+    function TestJson() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ContactJSON", "Home")',
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            /*
+            var parsed = $.parseJSON(data.d);
+            $.each(parsed, function (i, jsondata) {
+                $("#dividtodisplay").append("Appointment: " + jsondata.Appointment + "<br/>" + "Shipment: " + jsondata.Shipment);
+            });
+            */
+            console.log($.parseJSON(data));
+        },
+        error: function (XHR, errStatus, errorThrown) {
+            var err = JSON.parse(XHR.responseText);
+            errorMessage = err.Message;
+            alert(errorMessage);
+        }
+    });
+    }
+
+
+
+    ///////////////////////////////////////////////////////
+
+</script>

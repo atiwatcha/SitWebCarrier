@@ -1,0 +1,83 @@
+﻿@model List<SitWebCarrier.Models.Driver>
+@{
+    ViewBag.Title = "getDriver";
+}
+
+<h2>getTruck</h2>
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <button id="adTruck" onclick="addDriver() ">Add Driver</button>
+    <table id="getDriver">
+        <thead>
+            <tr>
+                <td>driver_code</td>
+                    <td>pers_code</td>
+                    <td>first_name</td>
+                    <td>last_name</td>
+                    <td>carrier</td>
+                     <td>drv_status</td>
+                    <td>license_type</td>
+                    <td>valid_from</td>
+                    <td>valid_to</td>
+                    <td>status</td>
+                    <td>rfid</td>
+                 <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+            
+                <tr>
+                    <td>@a.driver_code</td>
+                    <td>@a.pers_code</td>
+                    <td>@a.first_name</td>
+                    <td>@a.last_name</td>
+                    <td>@a.carrier</td>
+                     <td>@a.drv_status</td>
+                    <td>@a.license_type</td>
+                    <td>@a.valid_from</td>
+                    <td>@a.valid_to</td>
+                    <td>@a.status</td>
+                    <td>@a.rfid</td>
+                    <td>
+                        <button id="edTruck" onclick="editDriver('@a.driver_code.Trim()') ">Edit Driver</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#getDriver').DataTable();
+
+    });
+
+    function editDriver(driver_code) {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+            
+            href: '@Url.Action("getDriverEdit", "Carrier",new RouteValueDictionary(new { driver_code = "Temp_driver_code" }))'.replace("Temp_driver_code", driver_code),
+            type: 'ajax'
+        });
+    }
+
+    function addDriver() {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+
+            href: '@Url.Action("getDriverEdit", "Carrier")',
+            type: 'ajax'
+        });
+    }
+
+
+   
+</script>

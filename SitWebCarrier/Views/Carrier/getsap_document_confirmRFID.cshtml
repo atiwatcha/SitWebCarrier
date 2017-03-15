@@ -1,0 +1,59 @@
+﻿@model List<SitWebCarrier.Models.sap_document>
+@{
+    ViewBag.Title = "getsap_document_confirmRFID";
+    Layout = null;
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+     <table id="getsap_document" class="table">
+        <thead class="thead-inverse">
+            <tr>
+                <td>&nbsp;</td>
+                <td>Appointment time</td>
+                <td>Ship No.</td>
+                <td>DO No.</td>
+                <td>WH Location</td>
+                <td>Sold to</td>
+                <td>Ship to</td>
+                <td>Ship No. Date Create</td>
+                <td>Truck Type</td>
+                <td>Grade</td>
+                <td>Qty.</td>
+                <td>Other Intruction</td>
+                <td>Worker</td>
+                <td>Deliver Item note</td>
+                <td>Driver</td>
+                <td>Truck</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>
+                    <button type="button" id="countRFID" class="btn btn-primary" onclick="SaveRFID_SHIPMENT('@a.sap_shipment')">บันทึกเวลาแตะบัตรรายงานตัว</button>
+                    <td>@a.appointmenttime.Value.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>@a.sap_shipment</td>
+                    <td>@a.sap_do</td>
+                    <td>@a.b_state</td>
+                    <td> a.sold_to</td>
+                    <td>a.ship_to</td>
+                    <td>a.shipdatecreate</td>
+                    <td>@a.Transportationmode</td>
+                    <td>@a.DO_Grade</td>
+                    <td>@a.qty</td>
+                    <td>a.other intruction</td>
+                    <td>a.worker</td>
+                    <td>@a.notes</td>
+                     <td>@a.Drivername</td>
+                     <td>@a.Trailernumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

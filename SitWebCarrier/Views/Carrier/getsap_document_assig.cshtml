@@ -1,0 +1,179 @@
+﻿@model List<SitWebCarrier.Models.sap_document>
+@{
+    ViewBag.Title = "getSap_document";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+  @*<script src="~/Scripts/jquery-1.9.1.min.js"></script>*@
+    <script src="~/Scripts/jquery-2.1.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+     <link href="~/Content/css/select2.min.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.min.js"></script>
+    
+     <button id="getModal">แจกงานให้ บ.ขนส่ง</button>
+    <table id="getsap_document" class="table">
+        <thead class="thead-inverse">
+            <tr>
+                <td>&nbsp;</td>
+                <td>Appointment time</td>
+                <td>Ship No.</td>
+                <td>DO No.</td>
+                <td>WH Location</td>
+                <td>Sold to</td>
+                <td>Ship to</td>
+                <td>Ship No. Date Create</td>
+                <td>Truck Type</td>
+                <td>Grade</td>
+                <td>Qty.</td>
+                <td>Other Intruction</td>
+                <td>Worker</td>
+                <td>Deliver Item note</td>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="chk_sap_shipment[]" value="@a.sap_shipment"/></td>
+                    <td>@a.appointmenttime.Value.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>@a.sap_shipment</td>
+                    <td>@a.sap_do</td>
+                    <td>@a.b_state</td>
+                    <td> a.sold_to</td>
+                    <td>a.ship_to</td>
+                    <td>a.shipdatecreate</td>
+                    <td>@a.Transportationmode</td>
+                    <td>@a.DO_Grade</td>
+                    <td>@a.qty</td>
+                    <td>a.other intruction</td>
+                    <td>a.worker</td>
+                    <td>@a.notes</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">ขั้นตอนการแจกงานให้ บ.ขนส่ง</h4>
+                </div>
+                <div class="modal-body">
+                     <fieldset>
+                <legend>Log in Form</legend>
+                <ol>
+                    <li>
+                        <h4 class="modal-title">Shipment No : <span id="ship"></span></h4>
+                    </li>
+                    <li>
+                        <h4 class="modal-title">Carrier Name</h4>
+                        @*@Html.DropDownList("send_Carrier", new SelectList(ViewBag.List_Carriers, "carrier", "name"), new { @style = "width:100%"})*@
+                         <select id="send_Carrier" name="send_Carrier" style="width:100%">
+                            @foreach (SitWebCarrier.Models.Carriers d in ViewBag.List_Carriers)
+                            { 
+                                <option value="@d.carrier">@d.name</option>
+                            }
+                        </select>
+                    </li>                  
+                </ol>
+            </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="chk_sendCarrier()">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+}
+
+<script>
+
+    $(document).ready(function () {
+        $("#send_Carrier").select2({
+            multiple: false,
+            delay: 250
+        });
+    });
+
+    $('#getModal').click(ShowModal);
+    function ShowModal() {
+        $('#myModal').modal('show');
+        var shipments = "";
+        $("input[name='chk_sap_shipment[]']:checked").each(function () {
+            shipments += $(this).val()+" ";
+        });
+
+        $("#ship").html(shipments);
+    };
+
+    //not used
+    function chk_sendCarrier() {
+        var sap_shipments = []
+        $("input[name='chk_sap_shipment[]']:checked").each(function () {
+            sap_shipments.push($(this).val());
+        });
+        console.log(sap_shipments);
+       // var send_Carrier = $("#sap_shipments").val();
+        var send_Carrier = []
+        send_Carrier.push($("#send_Carrier").val());
+
+        var obj = { "sap_shipments": sap_shipments, "carrier": $("#send_Carrier").val() };
+        $.ajax({ 
+            type: "POST", 
+            cache: false, 
+            url: '@Url.Action("getSap_documentAssigCarrier", "Carrier")', // preview.php data: 
+            data: JSON.stringify(obj), // all form fields
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) { // on success, post (preview) returned data in fancybox 
+                console.log(data.Sucesss);
+                if (data.Sucesss == "0") {
+                    swal(data.ErrorMessage);
+                } else {
+                    $('#myModal').modal('hide');
+                    location.reload();
+                }
+                
+                //location.reload();
+
+            } // success 
+        }); // ajax
+
+        }
+
+        function editsap_document(sap_shipment) {
+            $.fancybox({
+                width: "800px",
+                height: "600px",
+
+                href: '@Url.Action("getsap_documentEdit", "Carrier", new RouteValueDictionary(new { sap_shipment = "Temp_sap_shipment" }))'.replace("Temp_sap_shipment", sap_shipment),
+            type: 'ajax'
+        });
+    }
+
+    function addsap_document() {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+
+            href: '@Url.Action("getsap_documentEdit", "Carrier")',
+            type: 'ajax'
+        });
+    }
+
+
+</script>

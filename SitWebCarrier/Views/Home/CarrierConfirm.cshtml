@@ -1,0 +1,35 @@
+﻿@model List<SitWebCarrier.Models.Carrier>
+@{
+    ViewBag.Title = "CarrierConfirm";
+}
+
+<h2>CarrierConfirm</h2>
+@if (ViewBag.ErrorMessage == null)
+{
+    <table id="example">
+        <thead>
+            <tr>
+                <td>col1</td>
+                <td>col2</td>
+                <td>col2</td>
+                <td>col2</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+            
+                <tr>
+                    <td>@a.Appointment</td>
+                    <td>@a.Shipment</td>
+                    <td>@a.IDVender</td>
+                    <td>
+                        <button id="getModal1" >ตรวจสอบและยืนยันรายละเอียด</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}else{
+     <h2>@ViewBag.ErrorMessage</h2>
+}
+

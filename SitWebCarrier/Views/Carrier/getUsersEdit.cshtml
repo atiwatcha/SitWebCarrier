@@ -1,0 +1,68 @@
+﻿@model SitWebCarrier.Models.Employee
+@{
+    ViewBag.Title = "getUsersEdit";
+    Layout = null;
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <section id="getUsersEdit">
+        <h2>Use a local account to log in.</h2>
+         @using (Html.BeginForm("editUsers", "Carrier", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+                <legend>Log in Form</legend>
+                <ol>
+                    <li>
+                        @Html.LabelFor(m => m.userid)
+                        @if (Model != null)
+                        {
+                            @Html.HiddenFor(m => m.userid)
+                        }else{
+                            @Html.TextBoxFor(m => m.userid_)
+                            @Html.ValidationMessageFor(m => m.userid)
+                        }
+                        
+
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.password)
+                        @Html.TextBoxFor(m => m.password)
+                        @Html.ValidationMessageFor(m => m.password)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.first_name)
+                        @Html.TextBoxFor(m => m.first_name)
+                        @Html.ValidationMessageFor(m => m.first_name)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.last_name)
+                        @Html.TextBoxFor(m => m.last_name)
+                        @Html.ValidationMessageFor(m => m.last_name)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.carrier)
+                        @Html.TextBoxFor(m => m.carrier)
+                        @Html.ValidationMessageFor(m => m.carrier)
+                    </li>
+                    <li>
+                        @Html.LabelFor(m => m.authorized)
+                        @Html.TextBoxFor(m => m.authorized)
+                        @Html.ValidationMessageFor(m => m.authorized)
+                    </li>
+                    
+                </ol>
+
+                <input type="submit" value="แก้ไข" />
+            </fieldset>
+
+        }
+    </section>
+}

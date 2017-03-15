@@ -1,0 +1,80 @@
+﻿@model SitWebCarrier.Models.Carrier
+@{
+    ViewBag.Title = "CarrierShipment";
+    Layout = null;
+}
+
+<h2>CarrierShipment</h2>
+
+@if (ViewBag.ErrorMessage == null)
+{
+     <fieldset>
+        <legend>Log in Form</legend>
+        <ol>
+            <li>
+                <div>Appointment</div>
+                <input type="text" id="Appointment" value="@Model.Appointment" />
+            </li>
+            <li>
+                <div>Appointment</div>
+               <input type="text" id="Shipment" value="@Model.Shipment" />
+            </li>
+            <li>
+                <div>Appointment</div>
+                <input type="text" id="IDVender" value="" />
+            </li>
+            <li>
+                <div>IDCar</div>
+                <input type="text" id="IDCar" value="" />
+            </li>
+            <li>
+                <div>IDDriver</div>
+                <input type="text" id="IDDriver" value="" />
+            </li>
+        </ol>
+         <button id="saveAppoint">บันทึก</button>
+    </fieldset>
+
+       
+}
+else
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+
+<script>
+
+    $('#saveAppoint').click(saveAppoint);
+
+
+    function saveAppoint() {
+        var Appointment = $("#Appointment").val();
+        var Shipment = $("#Shipment").val();
+        var IDVender = $("#IDVender").val();
+        var IDCar = $("#IDCar").val();
+        var IDDriver = $("#IDDriver").val();
+
+        var values = { "Appointment": Appointment, "Shipment": Shipment, "IDVender": IDVender, "IDCar": IDCar, "IDDriver": IDDriver };
+        //console.log(values);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveAppointment", "Home")',
+            data: values,
+            
+        success: function (data) {
+            /*
+            var parsed = $.parseJSON(data.d);
+            $.each(parsed, function (i, jsondata) {
+                $("#dividtodisplay").append("Appointment: " + jsondata.Appointment + "<br/>" + "Shipment: " + jsondata.Shipment);
+            });
+            */
+            console.log($.parseJSON(data));
+        },
+        error: function (XHR, errStatus, errorThrown) {
+            var err = JSON.parse(XHR.responseText);
+            errorMessage = err.Message;
+            alert(errorMessage);
+        }
+    });
+}
+</script>

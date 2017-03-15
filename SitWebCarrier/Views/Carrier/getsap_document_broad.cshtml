@@ -1,0 +1,134 @@
+﻿@model List<SitWebCarrier.Models.sap_document>
+@{
+    ViewBag.Title = "getsap_document_confirmRFID";
+    Layout = null;
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+
+        
+        
+        <link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Scripts/media/css/jquery.dataTables.css" rel="stylesheet" />
+        <link href="~/Scripts/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Scripts/fancybox-download/css/fancybox/jquery.fancybox.css" rel="stylesheet" />
+        <link href="~/Styles/sweetalert.css" rel="stylesheet" />
+        <link href="~/Content/css/select2.min.css" rel="stylesheet" />
+
+        <link href="~/Content/Site.css" rel="stylesheet" />
+@*            <link href="~/Content/css/CustomProject.css" rel="stylesheet" />*@
+
+       @* @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")*@
+
+@*    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/media/js/dataTables.bootstrap.min.js"></script>*@
+        <script src="~/Scripts/fancybox-download/js/libs/jquery-1.7.1.min.js"></script>
+        <script src="~/Scripts/media/js/jquery.dataTables.min.js"></script>
+        <script src="~/Scripts/media/js/dataTables.bootstrap.min.js"></script>
+        <script src="~/Scripts/fancybox-download/js/fancybox/jquery.fancybox.pack.js"></script>
+        <script src="~/Scripts/sweetalert.min.js"></script>
+        <script src="~/Scripts/SITWebCarrier.js"></script>
+        <script src="~/Scripts/select2.min.js"></script>
+
+
+
+  
+    </head>
+    <body>
+   
+
+        <header>
+            <div class="content-wrapper">
+                
+        </header>
+        <div id="body">
+            <section class="content-wrapper main-content clear-fix">
+                
+           
+
+             <table id="getsap_document" class="table" style="width:95%">
+        <thead class="thead-inverse">
+            <tr>
+                <td>Appointment time</td>
+                <td>Ship No.</td>
+                <td>DO No.</td>
+                <td>WH Location</td>
+                <td>Sold to</td>
+                <td>Ship to</td>
+                <td>Ship No. Date Create</td>
+                <td>Truck Type</td>
+                <td>Grade</td>
+                <td>Qty.</td>
+                <td>Other Intruction</td>
+                <td>Worker</td>
+                <td>Deliver Item note</td>
+                <td>Driver</td>
+                <td>Truck</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>@a.appointmenttime.Value.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>@a.sap_shipment</td>
+                    <td>@a.sap_do</td>
+                    <td>@a.b_state</td>
+                    <td> a.sold_to</td>
+                    <td>a.ship_to</td>
+                    <td>a.shipdatecreate</td>
+                    <td>@a.Transportationmode</td>
+                    <td>@a.DO_Grade</td>
+                    <td>@a.qty</td>
+                    <td>a.other intruction</td>
+                    <td>a.worker</td>
+                    <td>@a.notes</td>
+                     <td>@a.Drivername</td>
+                     <td>@a.Trailernumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+ </section>
+        </div>
+  
+        
+    </body>
+</html>
+    
+}
+
+<script>
+    $(document).ready(function () {
+        $('#getsap_document').DataTable({
+            "scrollX": true
+        });
+
+    });
+
+    var tid = setTimeout(countRFID, 2000);
+    function abortTimer() { // to be called when you want to stop the timer
+        clearTimeout(tid);
+    }
+
+    function countRFID() {
+        // do some stuff...
+        tid = setTimeout(countRFID, 5000); // repeat myself
+        console.log("timer");
+        //location.reload();
+    }
+</script>

@@ -1,0 +1,104 @@
+﻿@model List<SitWebCarrier.Models.sap_document>
+@{
+    ViewBag.Title = "getSap_document";
+    Layout = null;
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <link href="~/Content/Site.css" rel="stylesheet" />
+     <link href="~/Content/css/select2.min.css" rel="stylesheet" />
+    
+     <script src="~/Scripts/jquery-2.1.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    
+    <script src="~/Scripts/select2.min.js"></script>
+     
+    
+     <fieldset>
+                <legend>แก้ไขข้อมูล</legend>
+                <ol>
+                    <li>
+                        <h5 class="modal-title">Shipment No : @Model.First().sap_shipment</h5>
+                        <input type="hidden" id="sap_shipment_hide" value="" />
+                    </li>
+                    <li>
+                        <h5 class="modal-title">Driver</h5>
+                       @* @Html.DropDownList("List_Driver", new SelectList(ViewBag.List_Driver, "driver_code", "first_name"), new { @style = "width:100%" })*@
+
+                        <select id="List_Driver" name="List_Driver" style="width:100%">
+                            @foreach (SitWebCarrier.Models.Driver d in ViewBag.List_Driver)
+                            {
+                                if(d.driver_code == Model.First().Drivername){
+                                    <option value="@d.driver_code" selected>@d.first_name  @d.last_name</option>
+                                }else{
+                                    <option value="@d.driver_code">@d.first_name @d.last_name</option>
+                                }
+                                
+                            }
+                        </select>
+                    </li>   
+                    <li>
+                        <h5 class="modal-title">Truck</h5>
+                       @* @Html.DropDownList("List_Truck", new SelectList(ViewBag.List_Truck, "vehicle", "veh_text"), new { @style = "width:100%" })*@
+                        <select id="List_Truck" name="List_Truck" style="width:100%">
+                            @foreach (SitWebCarrier.Models.Truck t in ViewBag.List_Truck)
+                            {
+                                if(t.vehicle == Model.First().Trailernumber){
+                                    <option value="@t.vehicle" selected>@t.veh_text</option>
+                                }else{
+                                    <option value="@t.vehicle">@t.veh_text</option>
+                                }
+                                
+                            }
+                        </select>
+                    </li>                  
+                </ol>
+         </fieldset>
+            <button type="button" class="btn btn-primary" onclick="edit_sendDriverTruck()">Save changes</button>
+
+
+
+}
+
+<script>
+    $(document).ready(function () {
+        $("#List_Driver").select2({
+            multiple: false,
+            delay: 250
+        });
+        $("#List_Truck").select2({
+            multiple: false,
+            delay: 250
+        });
+    });
+    function edit_sendDriverTruck() {
+       
+        var obj = { "sap_shipment": "@Model.First().sap_shipment", "Drivername": $("#List_Driver").val(), "Trailernumber": $("#List_Truck").val() };
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("getSap_documentAssigDriverTrailer", "Carrier")', // preview.php data: 
+            data: JSON.stringify(obj), // all form fields
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) { // on success, post (preview) returned data in fancybox 
+                console.log(data.Sucesss);
+                if (data.Sucesss == "0") {
+                    swal(data.ErrorMessage);
+                } else {
+                    parent.jQuery.fancybox.close();
+                }
+
+                //location.reload();
+
+            } // success 
+        }); // ajax
+
+    }
+
+</script>

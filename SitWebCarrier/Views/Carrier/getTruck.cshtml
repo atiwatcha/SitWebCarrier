@@ -1,0 +1,102 @@
+﻿@model List<SitWebCarrier.Models.Truck>
+@{
+    ViewBag.Title = "getTruck";
+}
+
+<h2>getTruck</h2>
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    <button id="adTruck" onclick="addTruck() ">Add Truck</button>
+    <table id="getTruck">
+        <thead>
+            <tr>
+                <td>vehicle</td>
+                <td>veh_text</td>
+                <td>veh_type</td>
+                <td>veh_status</td>
+                <td>truck_status</td>
+                 <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+            
+                <tr>
+                    <td>@a.vehicle</td>
+                    <td>@a.veh_text</td>
+                    <td>@a.veh_type</td>
+                    <td>@a.veh_status</td>
+                    <td>@a.truck_status</td>
+                    <td>
+                        <button id="edTruck" onclick="editTruck('@a.vehicle.Trim()') ">Edit Truck</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#getTruck').DataTable();
+
+    });
+    //$('#TruckEdit').click(TruckEdit);
+
+    function editTruck(vehicle) {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+            
+            href: '@Url.Action("getTruckEdit", "Carrier",new RouteValueDictionary(new { vehicle = "Temp_vehicle" }))'.replace("Temp_vehicle", vehicle),
+            type: 'ajax'
+        });
+    }
+
+    function addTruck() {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+
+            href: '@Url.Action("getTruckEdit", "Carrier")',
+            type: 'ajax'
+        });
+    }
+
+
+    function TruckEdit() {
+        var vehicle = $("#vehicle").val();
+        var veh_text = $("#veh_text").val();
+        var veh_type = $("#veh_type").val();
+        
+        var values = { "vehicle": vehicle, "veh_text": veh_text, "veh_type": veh_type};
+
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("getTruckEdit", "Carrier")',
+            data: values,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                /*
+                var parsed = $.parseJSON(data.d);
+                $.each(parsed, function (i, jsondata) {
+                    $("#dividtodisplay").append("Appointment: " + jsondata.Appointment + "<br/>" + "Shipment: " + jsondata.Shipment);
+                });
+                */
+                console.log($.parseJSON(data));
+            },
+            error: function (XHR, errStatus, errorThrown) {
+                var err = JSON.parse(XHR.responseText);
+                errorMessage = err.Message;
+                alert(errorMessage);
+            }
+         });
+    }
+   
+</script>

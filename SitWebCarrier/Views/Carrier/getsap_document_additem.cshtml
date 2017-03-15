@@ -1,0 +1,158 @@
+﻿@model List<SitWebCarrier.Models.sap_document>
+@{
+    ViewBag.Title = "getSap_document";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <h2>@ViewBag.ErrorMessage</h2>
+}
+else
+{
+    
+@*<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>*@
+
+
+    <button type="button" id="countRFID" class="btn btn-primary" onclick="editsap_document()">แจ้งเตือน RFID 0</button>
+    <br />
+    <br />
+    
+    <table id="getsap_document1">
+        <thead>
+            <tr>
+                <td>&nbsp;</td>
+                <td>Appointment time</td>
+                <td>Ship No.</td>
+                <td>DO No.</td>
+                <td>WH Location</td>
+                <td>Sold to</td>
+                <td>Ship to</td>
+                <td>Ship No. Date Create</td>
+                <td>Truck Type</td>
+                <td>Grade</td>
+                <td>Qty.</td>
+                <td>Other Intruction</td>
+                <td>Worker</td>
+                <td>Deliver Item note</td>
+                <td>Driver</td>
+                <td>Truck</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>
+                        <button id="getModal1" onclick="geteditsend_carrier_assig('@a.sap_shipment')">เลือกคน รถ</button>
+                    </td>
+                    <td>@a.appointmenttime.Value.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>@a.sap_shipment</td>
+                    <td>@a.sap_do</td>
+                    <td>@a.b_state</td>
+                    <td>a.sold_to</td>
+                    <td>a.ship_to</td>
+                    <td>a.shipdatecreate</td>
+                    <td>@a.Transportationmode</td>
+                    <td>@a.DO_Grade</td>
+                    <td>@a.qty</td>
+                    <td>a.other intruction</td>
+                    <td>a.worker</td>
+                    <td>@a.notes</td>
+                    <td>@a.Drivername</td>
+                    <td>@a.Trailernumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+<script>
+    $(document).ready(function () {
+        $('#getsap_document1').DataTable({
+            "scrollX": true
+        });
+
+    });
+
+    function geteditsend_carrier_assig(sap_shipment) {
+        $.fancybox({
+            width: "80%",
+            height: "50%",
+
+            href: '@Url.Action("geteditsend_carrier_assig", "Carrier", new RouteValueDictionary(new { sap_shipment = "Temp_sap_shipment" }))'.replace("Temp_sap_shipment", sap_shipment),
+            type: 'iframe'
+        });
+    }
+
+    var tid = setTimeout(countRFID, 2000);
+    function abortTimer() { // to be called when you want to stop the timer
+        clearTimeout(tid);
+    }
+
+    function countRFID() {
+        // do some stuff...
+        tid = setTimeout(countRFID, 10000); // repeat myself
+        console.log("timer");
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("getRFID_tmpLoop", "Carrier")', // preview.php data: 
+            //data: JSON.stringify(obj), // all form fields
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) { // on success, post (preview) returned data in fancybox 
+                console.log(data.Sucesss);
+                if (data.Sucesss == "0") {
+                    //swal(data.ErrorMessage);
+                    $('#countRFID').html("แจ้งเตือน RFID 0 รายการ");
+                    $("#countRFID").css("background-color", "green");
+                } else {
+                    $('#countRFID').html("แจ้งเตือน RFID " + data.Count + " รายการ");
+                    $("#countRFID").css("background-color", "red");
+                }
+
+                //location.reload();
+
+            } // success 
+        }); // ajax
+    }
+
+    //
+    function editsap_document() {
+        $.fancybox({
+            width: "800px",
+            height: "600px",
+
+            href: '@Url.Action("getsap_document_confirmRFID", "Carrier")',
+            type: 'ajax'
+        });
+    }
+
+    function SaveRFID_SHIPMENT(sap_shipment) {
+        //alert(sap_shipment);
+        $.fancybox.close();
+        var obj = { "sap_shipment": sap_shipment };
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("saveSap_documentRFID", "Carrier")', // preview.php data: 
+                data: JSON.stringify(obj), // all form fields
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) { // on success, post (preview) returned data in fancybox 
+                    console.log(data.Sucesss);
+                    if (data.Sucesss == "0") {
+                        swal(data.ErrorMessage);
+                    } else {
+                        //$('#myModal').modal('hide');
+                        location.reload();
+                    }
+
+                    //location.reload();
+
+                } // success 
+            }); // ajax
+        }
+</script>
